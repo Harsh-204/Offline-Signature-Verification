@@ -2,7 +2,7 @@
 
 **Course Project Report**  
 **Author**: Student / Biometric Verification Coursework  
-**Date**: September 2026  
+**Date**: 17 September 2026  
 
 ---
 

@@ -1,0 +1,165 @@
+Metadata-Version: 2.4
+Name: sigverify
+Version: 0.1.0
+Summary: Offline signature verification using classical feature engineering
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: opencv-python-headless<5,>=4.8
+Requires-Dist: scikit-image<1,>=0.21
+Requires-Dist: scikit-learn<2,>=1.3
+Requires-Dist: numpy<2,>=1.24
+Requires-Dist: scipy<2,>=1.11
+Requires-Dist: matplotlib<4,>=3.7
+Requires-Dist: joblib<2,>=1.3
+Requires-Dist: pandas<3,>=2.0
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=7.4; extra == "dev"
+
+# 🖊️ Offline Signature Verification System
+
+[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/tests-passing-brightgreen.svg)]()
+
+An interpretable, classical computer vision signature verification system built with explicit feature engineering (**Hu Moments**, **HOG**, **LBP**, and **Pixel-Density Grids**) paired with PCA/LDA dimensionality reduction and a Support Vector Machine (SVM) binary pair-classifier.
+
+> [!NOTE]
+> **No Deep Learning / No GPU**: Designed specifically for explainable biometric verification on CPU-only hardware.
+
+---
+
+## 🚀 Environment Setup
+
+### 1. Prerequisites
+- Python 3.9+ installed on your system.
+- Git (optional, for cloning).
+
+### 2. Virtual Environment & Installation
+Clone or navigate to the repository directory, create a virtual environment, and install `sigverify` in editable mode:
+
+```bash
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
+pip install -e ".[dev]"
+
+# Linux / macOS
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+Verify installation:
+```bash
+sigverify --help
+```
+
+---
+
+## 📁 Dataset Placement
+
+Download the **CEDAR Signature Dataset** (55 writers, 24 genuine + 24 forged signatures each) and place it under `data/cedar/` as described in [`data/README.md`](file:///d:/Signature%20Verification/data/README.md):
+
+```
+data/
+  cedar/
+    full_org/           # genuine signatures (e.g., original_1_1.png)
+    full_forg/          # forged signatures (e.g., forgeries_1_1.png)
+```
+
+---
+
+## 💻 CLI Usage Guide
+
+The `sigverify` package provides four primary subcommands: `train`, `evaluate`, `verify`, and `ablation`.
+
+### 1. Train Model
+Fits feature extraction, PCA dimensionality reduction, and the SVM pair-classifier. Persists the complete model artifact to `models/model.pkl`.
+
+```bash
+sigverify train --data data/cedar --protocol writer-independent --out models/model.pkl
+```
+
+### 2. Evaluate Model
+Reproduces evaluation metrics (EER, AUC, Accuracy, Precision, Recall, F1) and generates visualization artifacts (`roc_curve.png`, `confusion_matrix.png`, `metrics.json`, `per_writer_accuracy.csv`).
+
+```bash
+sigverify evaluate --model models/model.pkl --data data/cedar --protocol writer-independent --out results/
+```
+
+### 3. Verify a Single Signature Pair (Demo)
+Performs inference on a single pair of images (one genuine reference and one query image to verify).
+
+```bash
+sigverify verify --model models/model.pkl --reference data/cedar/full_org/original_1_1.png --query data/cedar/full_forg/forgeries_1_1.png
+```
+
+#### Example Output:
+```
+=============================================
+        SIGNATURE VERIFICATION VERDICT        
+=============================================
+ Reference Image : data/cedar/full_org/original_1_1.png
+ Query Image     : data/cedar/full_forg/forgeries_1_1.png
+ Verdict         : FORGED
+ Confidence      : 94.20%
+=============================================
+```
+
+### 4. Run Feature Ablation Study
+Generates a comparative ablation table across individual feature groups (Hu-only, HOG-only, LBP-only, Grid-only, and Combined) saved as `results/ablation.csv`.
+
+```bash
+sigverify ablation --data data/cedar --protocol writer-independent --out results/
+```
+
+---
+
+## 🧪 Running Automated Tests
+
+Run the full pytest suite:
+
+```bash
+pytest -v
+```
+
+---
+
+## 🏛️ Project Structure
+
+```
+signature-verification/
+├── README.md
+├── PROJECT_SPEC.md
+├── pyproject.toml
+├── requirements.txt
+├── data/
+│   └── README.md
+├── src/
+│   └── sigverify/
+│       ├── __init__.py
+│       ├── preprocessing.py
+│       ├── features.py
+│       ├── feature_selection.py
+│       ├── pair_features.py
+│       ├── dataset.py
+│       ├── classifier.py
+│       ├── evaluate.py
+│       └── cli.py
+├── tests/
+│   ├── conftest.py
+│   ├── test_preprocessing.py
+│   ├── test_features.py
+│   ├── test_feature_selection.py
+│   ├── test_pair_features.py
+│   ├── test_dataset.py
+│   ├── test_classifier.py
+│   └── test_evaluate.py
+├── results/
+│   └── .gitkeep
+├── models/
+│   └── .gitkeep
+└── report/
+    └── project_report.md
+```

@@ -1,0 +1,23 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Full datasets (must NOT be committed)
+data/cedar/
+data/dummy/
+data/signatures/

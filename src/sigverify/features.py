@@ -31,7 +31,7 @@ def hu_moments(img: np.ndarray) -> np.ndarray:
     hu_log = np.zeros_like(hu)
     for i in range(len(hu)):
         abs_h = abs(hu[i])
-        if abs_h > 1e-12:
+        if abs_h > 0:
             hu_log[i] = -np.sign(hu[i]) * np.log10(abs_h)
     return hu_log
 

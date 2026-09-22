@@ -1,9 +1,9 @@
 {
-  "accuracy": 0.5,
-  "precision": 0.0,
-  "recall": 0.0,
-  "f1_score": 0.0,
-  "auc": 0.5,
-  "eer": 0.5,
-  "protocol": "writer-dependent"
+  "accuracy": 0.902567,
+  "precision": 0.817343,
+  "recall": 0.938131,
+  "f1_score": 0.873553,
+  "auc": 0.963173,
+  "eer": 0.095960,
+  "protocol": "writer-independent"
 }
